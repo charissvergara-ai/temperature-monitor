@@ -1,0 +1,92 @@
+<div class="min-h-screen flex flex-col bg-slate-50">
+  <header class="bg-slate-100 border-b border-gray-200 px-4 py-4 md:px-8 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+        <span class="text-white text-lg">🌡</span>
+      </div>
+      <h1 class="text-xl md:text-2xl font-semibold text-slate-900">TempMonitor</h1>
+    </div>
+    <div class="flex items-center gap-4">
+      <div
+        class="text-sm px-3 py-1.5 rounded-full font-medium"
+        [class]="wsService.isConnected() ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'"
+      >
+        @if (wsService.isConnected()) {
+          <span class="mr-1">●</span>
+        }
+        {{ wsService.isConnected() ? 'Live' : 'Offline' }}
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
+    <app-error-banner [message]="error()" />
+
+    @if (loading()) {
+      <div class="flex justify-center items-center h-52 text-lg text-slate-500">
+        Loading sensor data...
+      </div>
+    } @else {
+      <section class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
+        <app-stats-card
+          label="Active Sensors"
+          [value]="stats()?.activeSensorCount ?? 0"
+          subtitle="Since server start"
+        />
+        <app-stats-card
+          label="Messages/Min"
+          [value]="stats()?.averageMessagesPerMinute ?? 0"
+          subtitle="Average rate"
+        />
+      </section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <section class="lg:col-span-2">
+          <h2 class="text-xl font-semibold text-slate-900 mb-4">Sensor Readings</h2>
+          <app-sensor-table
+            [sensors]="sensors()"
+            [selectedSensorId]="selectedSensorId()"
+            (sensorSelected)="onSensorSelected($event)"
+          />
+        </section>
+
+        @if (selectedSensor()) {
+          <section>
+            <h2 class="text-xl font-semibold text-slate-900 mb-4">Sensor Details</h2>
+            <app-sensor-detail
+              [sensor]="selectedSensor()"
+              (closed)="onSensorDetailClosed()"
+            />
+          </section>
+        } @else {
+          <section>
+            <h2 class="text-xl font-semibold text-slate-900 mb-4">Sensor Details</h2>
+            <div class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-900/5 p-12 text-center text-slate-400">
+              <div class="text-5xl mb-4">📡</div>
+              <p>Select a sensor from the table to view live updates</p>
+            </div>
+          </section>
+        }
+      </div>
+    }
+  </main>
+
+  <footer class="bg-slate-900 text-slate-400 py-8 px-4 md:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+            <span class="text-white text-lg">🌡</span>
+          </div>
+          <div>
+            <span class="text-white font-semibold text-lg block">TempMonitor</span>
+            <p class="text-sm text-slate-400">Real-time temperature monitoring made simple.</p>
+          </div>
+        </div>
+        <div class="text-sm md:text-right">
+          <p>&copy; 2026 TempMonitor. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

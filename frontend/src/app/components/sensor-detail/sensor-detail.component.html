@@ -1,0 +1,61 @@
+<div class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-900/5 p-6">
+  <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
+    <h3 class="text-lg font-semibold text-slate-900">Sensor {{ sensor()?.sensorId }}</h3>
+    <button
+      class="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+      (click)="onClose()"
+    >×</button>
+  </div>
+
+  @if (sensor(); as s) {
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <div class="bg-slate-100 rounded-xl p-4 text-center">
+        <span class="block text-sm text-slate-500 mb-1">Average Temp</span>
+        <span class="text-2xl font-bold text-slate-900">{{ s.averageTemperature | number:'1.1-1' }}°C</span>
+      </div>
+      <div class="bg-slate-100 rounded-xl p-4 text-center">
+        <span class="block text-sm text-slate-500 mb-1">Total Readings</span>
+        <span class="text-2xl font-bold text-slate-900">{{ s.readingCount }}</span>
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <h4 class="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+        Live Updates
+        <span
+          class="text-xs font-medium px-2 py-0.5 rounded-full"
+          [class]="wsService.isConnected() ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'"
+        >
+          {{ wsService.isConnected() ? '● Connected' : '○ Disconnected' }}
+        </span>
+      </h4>
+
+      @if (liveReading()) {
+        <div class="bg-blue-600/90 text-white rounded-xl p-6 text-center">
+          <div class="text-5xl font-bold">{{ liveReading()!.temperature }}°C</div>
+          <div class="text-sm text-blue-200 mt-2">
+            {{ liveReading()!.timestamp | date:'HH:mm:ss' }}
+          </div>
+        </div>
+      } @else {
+        <div class="bg-slate-50 rounded-xl p-8 text-center text-slate-400">
+          Waiting for data...
+        </div>
+      }
+    </div>
+
+    <div>
+      <h4 class="text-sm font-semibold text-slate-900 mb-3">Recent Readings</h4>
+      <div class="max-h-48 overflow-y-auto">
+        @for (reading of s.readings.slice().reverse().slice(0, 10); track reading.timestamp) {
+          <div class="flex justify-between py-3 border-b border-slate-100 last:border-0">
+            <span class="font-semibold text-blue-600">{{ reading.temperature }}°C</span>
+            <span class="text-sm text-slate-400">{{ reading.timestamp | date:'HH:mm:ss' }}</span>
+          </div>
+        } @empty {
+          <div class="text-center text-slate-400 py-4">No readings yet</div>
+        }
+      </div>
+    </div>
+  }
+</div>

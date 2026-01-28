@@ -1,0 +1,39 @@
+<div class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-900/5 overflow-hidden">
+  <table class="w-full">
+    <thead>
+      <tr class="bg-blue-600/90">
+        <th class="px-6 py-4 text-left text-sm font-semibold text-white">Sensor ID</th>
+        <th class="px-6 py-4 text-left text-sm font-semibold text-white">Avg Temp (°C)</th>
+        <th class="px-6 py-4 text-left text-sm font-semibold text-white">Readings</th>
+        <th class="px-6 py-4 text-left text-sm font-semibold text-white">Last Reading</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (sensor of sensors(); track sensor.sensorId; let odd = $odd) {
+        <tr
+          class="cursor-pointer transition-colors"
+          [class.bg-slate-50]="odd && selectedSensorId() !== sensor.sensorId"
+          [class.bg-white]="!odd && selectedSensorId() !== sensor.sensorId"
+          [class.bg-blue-100]="selectedSensorId() === sensor.sensorId"
+          [class.hover:bg-blue-50]="selectedSensorId() !== sensor.sensorId"
+          (click)="onSensorSelect(sensor.sensorId)"
+        >
+          <td class="px-6 py-4 font-medium text-slate-900">{{ sensor.sensorId }}</td>
+          <td class="px-6 py-4 text-blue-600 font-semibold">{{ sensor.averageTemperature | number:'1.1-1' }}°C</td>
+          <td class="px-6 py-4 text-slate-600">{{ sensor.readingCount }}</td>
+          <td class="px-6 py-4 text-slate-900">
+            @if (sensor.lastReading !== null) {
+              {{ sensor.lastReading }}°C
+            } @else {
+              <span class="text-slate-400">-</span>
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" class="px-6 py-12 text-center text-slate-400">No sensor data available</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
