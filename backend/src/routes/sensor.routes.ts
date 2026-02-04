@@ -37,7 +37,7 @@ router.get('/sensors', (_req: Request, res: Response) => {
  */
 router.get('/sensors/:id', (req: Request, res: Response) => {
   try {
-    const sensorId = parseInt(req.params.id, 10);
+    const sensorId = parseInt(req.params.id as string, 10);
 
     if (isNaN(sensorId) || sensorId < 0 || sensorId > 63) {
       res.status(400).json({ error: 'Invalid sensor ID. Must be between 0 and 63.' });

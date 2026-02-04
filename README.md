@@ -240,3 +240,16 @@ npm test
 - Responsive design (mobile + desktop)
 - Auto-reconnection with exponential backoff
 - Error handling with user-friendly messages
+
+
+## Screenshots
+
+List of Sensors
+<img src="./docs/screenshot1.png" width="600">
+
+
+With Sensor Details
+<img src="./docs/screenshot2.png" width="600">
+
+Error Message
+<img src="./docs/screenshot3.png" width="600">
