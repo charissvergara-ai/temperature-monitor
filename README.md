@@ -244,12 +244,11 @@ npm test
 
 ## Screenshots
 
-List of Sensors
+#### List of Sensors
 <img src="./docs/screenshot1.png" width="600">
 
-
-With Sensor Details
+#### With Sensor Details
 <img src="./docs/screenshot2.png" width="600">
 
-Error Message
+#### Error Message
 <img src="./docs/screenshot3.png" width="600">
